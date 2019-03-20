@@ -496,21 +496,6 @@ int main(){
 				if(player_ships[ship_num]->get_HP() == 2){
 					game_field.set_field( player_ships[ship_num]->get_coord_x(), player_ships[ship_num]->get_coord_y(), '2' );
 				}
-				
-				//Удалить обоих нафиг
-				/*temp = player_ships[player_num];
-				player_ships[player_num] = player_ships[ship_num];
-				player_ships[ship_num] = temp;
-				Sleep(3000); 
-				cout << "Assistant: ";
-				delete player_ships[player_num];
-				player_num--;
-				temp = player_ships[player_num];
-				player_ships[player_num] = player_ships[collided_num];
-				player_ships[collided_num] = temp;
-				cout << "Assistant: ";
-				delete player_ships[player_num];
-				player_num--;*/
 			}
 			else if( (game_field.get_field(coord_x-1, coord_y-1) == 'L') || (game_field.get_field(coord_x-1, coord_y-1) == 'l') || (game_field.get_field(coord_x-1, coord_y-1) == 'H') || (game_field.get_field(coord_x-1, coord_y-1) == 'h') ){
 				cout << "Commander: " << "Ship " << ship_num+1 << ", move to (" << coord_x << ", " << coord_y << "). Over." << endl;
