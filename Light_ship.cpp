@@ -5,6 +5,7 @@ using namespace std;
 
 Light_ship::Light_ship()
 {
+	cout << "Light ship created" << endl;
 	this->HP = 3;
 	this->type = 1;
 	this->movement = 2;

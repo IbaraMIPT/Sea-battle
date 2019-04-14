@@ -3,7 +3,10 @@
 
 using namespace std;
 
-Ship::Ship(){}
+Ship::Ship()
+{
+	cout << "Ship constructor" << endl;
+}
 
 Ship::~Ship()
 {

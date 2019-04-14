@@ -1,13 +1,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Ship.h"
+#include "Light_ship.h"
+#include "Heavy_ship.h"
 
 class Player{
 	private:
 		int ship_num;
 		int current_ship_num;
-		Ship** ships;
 	public:
 		int coord_x;
 		int coord_y;
@@ -16,12 +16,11 @@ class Player{
 		
 		Player();
 		~Player();
+		void player_init();
 		int get_ship_num();
 		int get_current_ship_num();
 		void set_current_ship_num(int i);
-		virtual void turn();
-		virtual void move();
-		virtual void attack();
+		void turn();
 };
 
 #endif

@@ -5,6 +5,7 @@ using namespace std;
 
 Heavy_ship::Heavy_ship()
 {
+	cout << "Heavy ship created" << endl;
 	this->HP = 6;
 	this->type = 2;
 	this->movement = 1;
