@@ -14,7 +14,7 @@ Field::Field()
 	}
 }
 
-void Field::light_ships_generation()
+/*void Field::light_ships_generation()
 {
 	srand(time(NULL));																				
 	int _x, _y;																						
@@ -80,7 +80,7 @@ void Field::all_ships_generation()
 	heavy_ships_generation();																		
 	comp_light_ships_generation();																	
 	comp_heavy_ships_generation();	
-}
+}*/
 
 char Field::get_field(int x, int y) {return sea[x][y];}
 

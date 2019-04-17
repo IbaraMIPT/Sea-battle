@@ -5,7 +5,7 @@ using namespace std;
 
 Ship::Ship()
 {
-	cout << "Ship constructor" << endl;
+	//cout << "Ship constructor" << endl;
 }
 
 Ship::~Ship()

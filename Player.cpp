@@ -11,7 +11,7 @@ void Player::player_init()
 
 Player::Player()
 {
-	cout << "Player constructor" << endl;
+	//cout << "Player constructor" << endl;
 }
 
 Player::get_ship_num(){return ship_num;}

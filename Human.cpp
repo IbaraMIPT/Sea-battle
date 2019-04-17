@@ -1,7 +1,14 @@
 #include "Human.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
+
+/*Human::Human()
+{
+	cout << "Human created" << endl;
+}*/
 
 void Human::choose_action()
 {
@@ -9,6 +16,8 @@ void Human::choose_action()
 	"Enter 'm' to move or 'a' to attack or 'i' to get info about your ships: ";
 	cin >> choosen_action;
 }
+
+char Human::get_choosen_action(){return *choosen_action;}
 
 void Human::human_init()
 {
@@ -25,10 +34,15 @@ void Human::human_init()
 	}
 }
 
+void Human::get_ship_info(int num)
+{
+	human_ships[num]->info();
+}
+
 void Human::choose_ship()
 {
 	cout << "Choose ship: enter ship coordinates: ";													
-	cin >> coord_x >> coord_y;
+	cin >> this->coord_x >> this->coord_y;
 	for (int i = 0; i <= this->get_ship_num(); i++)
 	{																			
 		if ((human_ships[i]->get_coord_x() == coord_x - 1) && (human_ships[i]->get_coord_y() == coord_y - 1))
@@ -40,7 +54,7 @@ void Human::choose_ship()
 	{
 		cout << "No ship on this field" << endl << 
 		"Choose ship: enter ship coordinates: ";
-		cin >> coord_x >> coord_y;
+		cin >> this->coord_x >> this->coord_y;
 		for (int i = 0; i <= this->get_ship_num(); i++)
 		{																			
 			if ((human_ships[i]->get_coord_x() == coord_x - 1) && (human_ships[i]->get_coord_y() == coord_y - 1))
@@ -51,10 +65,74 @@ void Human::choose_ship()
 	}
 }
 
-void Human::move(){
+void Human::set_ships_coords()
+{
+	for (int i = 0; i < 5; i++)
+	{
+		srand(time(NULL));
+		int _x, _y;
+		_x = rand()%9;																				
+		_y = rand()%2;
+		for (int j = 0; j < i; j++)
+		{
+			while ( (human_ships[j]->get_coord_x() == _x) && (human_ships[j]->get_coord_y() == _y) )
+			{
+				_x = rand()%9;																				
+				_y = rand()%2;
+			}
+		}
+		human_ships[i]->set_coords(_x, _y);
+	}
+}
+
+Human::get_ship_coord_x(int num)
+{
+	return human_ships[num]->get_coord_x();
+}
+
+Human::get_ship_coord_y(int num)
+{
+	return human_ships[num]->get_coord_y();
+}
+
+Human::get_ship_HP(int num)
+{
+	return human_ships[num]->get_HP();
+}
+
+void Human::move()
+{
+	cout << "Enter new coordinates: " << endl;
+	cin >> this->new_coord_x >> this->new_coord_y;
+}
+
+void Human::attack()
+{
 	
 }
 
-void Human::attack(){
-	
+void Human::info(){
+	for (int i = 0; i < this->get_ship_num(); i++ )
+	{
+		human_ships[i]->info();
+		cout << endl;
+	}
 }
+
+/*void Human::turn()
+{
+	this->choose_ship();
+	this->choose_action();
+	if ()
+	{
+		move();
+	}
+	else if ()
+	{
+		attack();
+	}
+	else 
+	{
+		info();
+	}
+}*/

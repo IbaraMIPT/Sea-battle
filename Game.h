@@ -10,7 +10,8 @@ class Game{
 	public:
 		Game();
 		~Game();
-		intro();
+		void set_ships_on_field();
+		void live();
 };
 
 #endif
