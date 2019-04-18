@@ -74,10 +74,12 @@ void Game::live()
 	system("pause");
 	system("cls");
 	game_field->show_field();
-	/*while ( (human->get_ship_num() > 0) && (bot->get_ship_num() > 0) )
+	while ( (human->get_ship_num() > 0) && (bot->get_ship_num() > 0) )
 	{
-		//->	All game engine will be here	
-	}*/
+		//->	All game engine will be here
+		human->choose_ship();
+		cout << human->get_current_ship_num() << endl;	
+	}
 }
 	
 

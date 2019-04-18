@@ -43,7 +43,8 @@ void Human::choose_ship()
 {
 	cout << "Choose ship: enter ship coordinates: ";													
 	cin >> this->coord_x >> this->coord_y;
-	for (int i = 0; i <= this->get_ship_num(); i++)
+	this->set_current_ship_num(-1);
+	for (int i = 0; i < this->get_ship_num(); i++)
 	{																			
 		if ((human_ships[i]->get_coord_x() == coord_x - 1) && (human_ships[i]->get_coord_y() == coord_y - 1))
 		{
@@ -55,7 +56,7 @@ void Human::choose_ship()
 		cout << "No ship on this field" << endl << 
 		"Choose ship: enter ship coordinates: ";
 		cin >> this->coord_x >> this->coord_y;
-		for (int i = 0; i <= this->get_ship_num(); i++)
+		for (int i = 0; i < this->get_ship_num(); i++)
 		{																			
 			if ((human_ships[i]->get_coord_x() == coord_x - 1) && (human_ships[i]->get_coord_y() == coord_y - 1))
 			{
