@@ -11,6 +11,7 @@ class Game{
 		Game();
 		~Game();
 		void set_ships_on_field();
+		void cout_coords();
 		void live();
 };
 

@@ -71,15 +71,20 @@ void Human::set_ships_coords()
 	{
 		srand(time(NULL));
 		int _x, _y;
+		int mas_x[5];
+		int mas_y[5];
 		_x = rand()%9;																				
 		_y = rand()%2;
 		for (int j = 0; j < i; j++)
 		{
-			while ( (human_ships[j]->get_coord_x() == _x) && (human_ships[j]->get_coord_y() == _y) )
+			for (int k = 0; k < i; k++)
 			{
-				_x = rand()%9;																				
-				_y = rand()%2;
-			}
+				while ( (human_ships[k]->get_coord_x() == _x) && (human_ships[k]->get_coord_y() == _y) )
+				{
+					_x = rand()%9;																				
+					_y = rand()%2;
+				}
+			}	
 		}
 		human_ships[i]->set_coords(_x, _y);
 	}

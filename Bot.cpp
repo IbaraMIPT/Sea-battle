@@ -62,15 +62,27 @@ void Bot::set_ships_coords()
 	for (int i = 0; i < 5; i++)
 	{
 		srand(time(NULL));
-		int _x, _y;
+		int _x, _y, n;
+		n = rand()%5+1;
 		_x = rand()%9;																				
 		_y = rand()%2 + 7;
-		for (int j = 0; j < i; j++)
+		for (int k = 0; k < n; k++)
 		{
-			while ( (bot_ships[j]->get_coord_x() == _x) && (bot_ships[j]->get_coord_y() == _y) )
+			_x = _x + rand()%5-2;
+			while ( (_x < 0) || (_x >= 9) )
 			{
-				_x = rand()%9;																				
-				_y = rand()%2 + 7;
+				_x = _x + rand()%5-2;	
+			}
+			for (int l = 0; l < i; l++)
+			{
+				for (int j = 0; j < i; j++)
+				{
+					while ( (bot_ships[j]->get_coord_x() == _x) && (bot_ships[j]->get_coord_y() == _y) )
+					{
+						_x = rand()%9;																				
+						_y = rand()%2 + 7;
+					}
+				}	
 			}
 		}
 		bot_ships[i]->set_coords(_x, _y);
