@@ -54,8 +54,7 @@ void Ship::show_coords()
 
 void Ship::info()
 {
-	cout << 
-	"Type: " << type << endl << 
+	cout <<  
 	"HP: " << HP << endl << 
 	"Movement: " << movement << endl << 
 	"Damage: " << damage << endl << 

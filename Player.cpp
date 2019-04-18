@@ -3,15 +3,10 @@
 
 using namespace std;
 
-void Player::player_init()
+Player::Player()
 {
 	this->ship_num = 5;
 	this->current_ship_num = -1;
-}
-
-Player::Player()
-{
-	//cout << "Player constructor" << endl;
 }
 
 Player::get_ship_num(){return ship_num;}
