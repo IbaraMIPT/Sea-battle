@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
+#include <cmath>
+#include <windows.h>
 
 using namespace std;
 
@@ -12,12 +15,23 @@ using namespace std;
 
 void Human::choose_action()
 {
+	char step[1];
 	cout << "Do you want to move or attack?" << endl <<													
 	"Enter 'm' to move or 'a' to attack or 'i' to get info about your ships: ";
-	cin >> choosen_action;
+	cin >> step;
+	while(true){
+		if ((strcmp(step, "a") == 0) || (strcmp(step, "m") == 0) || (strcmp(step, "i") == 0) ){
+			break;
+		}
+		else{
+			cout << "Incorrect input! Try again: ";
+			cin >> step;
+		}
+	}
+	choosen_action[0] = step[0];
 }
 
-char Human::get_choosen_action(){return *choosen_action;}
+char* Human::get_choosen_action(){return choosen_action;}
 
 void Human::human_init()
 {
@@ -101,44 +115,20 @@ Human::get_ship_coord_y(int num)
 	return human_ships[num]->get_coord_y();
 }
 
+Human::get_ship_movement(int num)
+{
+	return human_ships[num]->get_movement();
+}
+
 Human::get_ship_HP(int num)
 {
 	return human_ships[num]->get_HP();
 }
 
-void Human::move()
-{
-	cout << "Enter new coordinates: " << endl;
-	cin >> this->new_coord_x >> this->new_coord_y;
-}
-
-void Human::attack()
-{
-	
-}
-
 void Human::info(){
 	for (int i = 0; i < this->get_ship_num(); i++ )
 	{
+		//Sleep(1500);
 		human_ships[i]->info();
-		cout << endl;
 	}
 }
-
-/*void Human::turn()
-{
-	this->choose_ship();
-	this->choose_action();
-	if ()
-	{
-		move();
-	}
-	else if ()
-	{
-		attack();
-	}
-	else 
-	{
-		info();
-	}
-}*/

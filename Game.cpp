@@ -6,6 +6,11 @@
 #include "Human.h"
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+#include <cmath>
+#include <windows.h>
 
 using namespace std;
 
@@ -15,16 +20,19 @@ Field* game_field;
 
 Game::Game()
 {
-	//cout << "Game constructor" << endl;
 	game_field = new Field;
 	human = new Human;
 	human->human_init();
-	//cout << "-----------------------" << endl;
 	bot = new Bot;
 	bot->bot_init();
-	//cout << "-----------------------" << endl << endl;
 	human->set_ships_coords();
 	bot->set_ships_coords();
+}
+
+float distance(int x, int y, int _x, int _y) 
+{
+	float dist = sqrt( pow( (_x - x),2 ) + pow( (_y - y),2 ) );
+	return dist;
 }
 
 void Game::set_ships_on_field()
@@ -76,9 +84,63 @@ void Game::live()
 	game_field->show_field();
 	while ( (human->get_ship_num() > 0) && (bot->get_ship_num() > 0) )
 	{
+		
 		//->	All game engine will be here
+		
 		human->choose_ship();
-		cout << human->get_current_ship_num() << endl;	
+		TryAgain:
+		human->choose_action();
+		if ( strcmp(human->get_choosen_action(), "i") == 0 )
+		{
+			
+		//->	Info
+		
+			cout << "Getting info..." << endl;
+			human->info();
+			cout << endl;
+			goto TryAgain;
+		}
+		else if ( strcmp(human->get_choosen_action(), "m") == 0 )
+		{
+			
+		//->	Movement
+			
+			cout << "Enter new coordinates: " << endl;
+			MoveAgain:
+			cin >> human->new_coord_x >> human->new_coord_y;
+			human->new_coord_x--;
+			human->new_coord_y--;
+			
+			//->	ERROR: out of bounds
+			while ( (human->new_coord_x < 0) || (human->new_coord_x > 8) || (human->new_coord_y < 0) || (human->new_coord_y > 8) )
+			{							
+				cout << "Incorrect input!" << endl;
+				goto MoveAgain; 
+			}
+			
+			//->	ERROR: ship already in place
+			while ( ( human->new_coord_x == human->get_ship_coord_x(human->get_current_ship_num() ) ) && ( human->new_coord_y == human->get_ship_coord_y(human->get_current_ship_num() ) ) )
+			{
+				cout << "Your ship is already at this field!" << endl;													
+				goto MoveAgain;
+			}
+			
+			//->	ERROR: Ship can't move fo far 
+			while ( distance(  human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), human->new_coord_x, human->new_coord_y ) > human->get_ship_movement( human->get_current_ship_num() ) )
+			{
+					cout << distance(  human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), human->new_coord_x, human->new_coord_y ) << endl;
+					cout << "Your ship can't move so far!" << endl;	
+					goto MoveAgain;
+			}
+		}
+		else
+		{
+			
+		//->	Attack
+			
+			
+		}
+		break;
 	}
 }
 	

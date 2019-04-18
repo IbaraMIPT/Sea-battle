@@ -19,7 +19,6 @@ class Player{
 		int get_ship_num();
 		int get_current_ship_num();
 		void set_current_ship_num(int i);
-		void turn();
 };
 
 #endif
