@@ -408,7 +408,7 @@ int main(){
 				cin >> coord_x >> coord_y; 
 			}
 			while ( ( coord_x-1 == player_ships[ship_num]->get_coord_x() ) && ( coord_y-1 == player_ships[ship_num]->get_coord_y() ) ){
-				cout << "Your ship is already at this field";													//Ошибка: корабль уже на месте
+				cout << "Your ship is already at this field! Try again: ";										//Ошибка: корабль уже на месте
 				cin >> coord_x >> coord_y;
 			}
 			while (distance( player_ships[ship_num]->get_coord_x()+1, player_ships[ship_num]->get_coord_y()+1, coord_x, coord_y) > player_ships[ship_num]->get_movement()){
