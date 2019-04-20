@@ -8,15 +8,20 @@ class Bot : public Player {
 		//Bot();
 		~Bot();
 		void bot_init();
-		void set_all_priority();
 		void choose_max_priority();
 		int get_max_priority();
 		int get_ship_coord_x(int num);
 		int get_ship_coord_y(int num);
 		int get_ship_HP(int num);
+		int get_ship_priority(int num);
+		int get_ship_attack_radius(int num);
+		int get_ship_movement(int num);
+		int get_ship_damage(int num);
+		void set_ship_priority(int num, int pr);
 		void set_max_priority(int pr);
 		void set_ship_HP(int num, int _dam);
 		void set_ships_coords();
+		void choose_rabdom_ship();
 		int find_collided_ship_num(int _x, int _y);
 		void delete_ship(int num);
 	private:

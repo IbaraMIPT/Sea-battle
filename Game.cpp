@@ -149,9 +149,6 @@ void Game::live()
 	system("pause");
 	system("cls");
 	game_field->show_field();
-	for (int i = 0; i < 5; i++){
-		cout << i << ": " << human->get_ship_coord_x(i) << " " << human->get_ship_coord_y(i) << endl;
-	}
 	while ( (human->get_ship_num() > 0) && (bot->get_ship_num() > 0) )
 	{
 		
@@ -311,7 +308,109 @@ void Game::live()
 			
 			this->show_turn();
 		}
+		
+		//------COMPUTER TURN------
+		
+		if ( (human->get_ship_num() < 0) || ( (bot->get_ship_num() < 0) ) )
+		{
+			break;
+		}
+		cout << "Computer turn... " << endl;
+		Sleep(3000);
+		
+		for (int i = 0; i < bot->get_ship_num(); i++ )
+		{
+			if (bot->get_ship_HP(i) <= 2)
+			{
+				bot->set_ship_priority(i, 200);
+			}
+			else
+			{
+				bot->set_ship_priority(i, 300);	
+			}
+			for (j = 0; j < human->get_ship_num(); j++)
+			{
+				if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= human->get_ship_attack_radius(j) ) )
+				{
+					bot->set_ship_priority(i, 700);
+				}
+				if ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= human->get_ship_attack_radius(j) )
+				{
+					bot->set_ship_priority(i, 800);
+				}
+				if ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius(i) )
+				{
+					bot->set_ship_priority(i, 850);	
+				}	
+				if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_movement(i) ) )
+				{
+					bot->set_ship_priority(900);
+				}
+				if ( ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius(i) ) && (human->get_ship_HP(j) - bot->get_ship_damage(i) <= 0) )
+				{
+					bot->set_ship_priority(1000);
+				}
+			}
+		}
+		//priority set
+		
+		bot->choose_random_ship();
+		bot->choose_max_priority();
+		
+		if (bot->get_max_priority() == 1000)
+		{
+			for (int j = 0; j < human->get_ship_num(); j++)
+			{
+				if ( ( distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius( bot->get_current_ship_num() ) ) && (human->get_ship_HP(j) - bot->get_ship_damage( bot->get_current_ship_num() ) <= 0) )
+				{
+					human->collided_ship_num = j;
+					break;
+				}
+			}
+			human->set_ship_HP(human->collided_ship_num, bot->get_ship_damage(bot->get_current_ship_num() ) );
+			this->draw_ship_on_field(1, human->collided_ship_num);
+			human->delete_ship(human->collided_ship_num);
+		}
+		else if (bot->get_max_priority() == 900)
+		{
+			if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_movement(i) ) )
+			{
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				game_field->set_field( human->get_ship_coord_x(human->collided_ship_num), human->get_ship_coord_y(human->collided_ship_num), '0');
+				bot->delete_ship(bot->get_current_ship_num());
+				human->delete_ship(human->collided_ship_num);
+			}
+		}
+		else if (bot->get_max_priority() == 850)
+		{
+			for (int j = 0; j < human->get_ship_num(); j++)
+			{
+				if ( distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius( bot->get_current_ship_num() ) )
+				{
+					human->collided_ship_num = j;
+				}
+			}
+			human->set_ship_HP( human->collided_ship_num, bot->get_ship_damage( bot->get_current_ship_num() ) );
+			this->draw_ship_on_field(1, human->collided_ship_num);
+		}
+		else if (bot->get_max_priority() == 800)
+		{
+			
+		}
+		else if (bot->get_max_priority() == 700)
+		{
+			
+		}
+		else if (bot->get_max_priority() == 300)
+		{
+			
+		}
+		else if (bot->get_max_priority() == 200)
+		{
+			
+		}
 	}
+	
 }
 	
 

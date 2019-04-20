@@ -58,6 +58,7 @@ void Human::choose_ship()
 	cout << "Choose ship: enter ship coordinates: ";													
 	cin >> this->coord_x >> this->coord_y;
 	this->set_current_ship_num(-1);
+	//!!!
 	for (int i = 0; i < this->get_ship_num(); i++)
 	{																			
 		if ((human_ships[i]->get_coord_x() == coord_x - 1) && (human_ships[i]->get_coord_y() == coord_y - 1))
@@ -162,6 +163,7 @@ void Human::delete_ship(int num)
 	temp = human_ships[this->get_ship_num()];
 	human_ships[this->get_ship_num()] = human_ships[num];
 	human_ships[num] = temp;
+	//!!!
 	delete human_ships[this->get_ship_num()];
 	this->set_ship_num(1);
 }

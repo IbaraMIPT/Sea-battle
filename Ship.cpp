@@ -11,7 +11,6 @@ Ship::Ship()
 Ship::~Ship()
 {
 	//cout << "Ship deleted" << endl;
-	priority = -1000;
 }
 
 bool Ship::is_alive() {return alive;}

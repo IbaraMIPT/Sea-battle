@@ -33,17 +33,60 @@ void Bot::set_ship_HP(int num, int _dam)
 	bot_ships[num]->set_HP(_dam);
 }
 
-void Bot::set_all_priority()
+Bot::get_ship_priority(int num)
 {
-	
+	return bot_ships[num]->get_priority();
+}
+
+void Bot::set_ship_priority(int num, int pr)
+{
+	bot_ships[num]->set_priority(pr);
+}
+
+Bot::get_ship_attack_radius(int num)
+{
+	return bot_ships[num]->get_attack_radius();
+}
+
+Bot::get_ship_movement(int num)
+{
+	return bot_ships[num]->get_movement();
+}
+
+Bot::get_ship_damage(int num)
+{
+	return bot_ships[num]->get_damage();
+}
+
+void Bot::choose_rabdom_ship()
+{
+	int rand = rand()%5;
+	computer_ship_num = this->get_ship_num() - rand;
+	while (this->get_current_ship_num() < 0)
+	{
+		int rand = rand()%5;
+		computer_ship_num = this->get_ship_num() - rand;
+	}
 }
 
 void Bot::choose_max_priority()
 {
-	
+	int max = this->get_max_priority();
+	for (int i = 0; i < this->get_ship_num(); i++)
+	{
+		if (bot_ships[i]->get_priority() > max)
+		{
+			max = bot_ships[i]->get_priority();
+			this->set_current_ship_num(i);	
+		}
+	}
+	this->set_max_priority(max);
 }
 
-Bot::get_max_priority(){return max_priority;}
+Bot::get_max_priority()
+{
+	return max_priority;
+}
 
 void Bot::set_max_priority(int pr)
 {
