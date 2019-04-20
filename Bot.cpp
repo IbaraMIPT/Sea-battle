@@ -8,10 +8,25 @@
 
 using namespace std;
 
-/*Bot::Bot()
+int Bot::find_collided_ship_num(int _x, int _y)
 {
-	cout << "Bot created" << endl;
-}*/
+	for (int i = 0; i < this->get_ship_num(); i++)
+	{
+		if ( (bot_ships[i]->get_coord_x() == _x) && (bot_ships[i]->get_coord_y() == _y) )
+		{
+			collided_ship_num = i;
+		}
+	}
+}
+
+void Bot::delete_ship(int num)
+{
+	Ship* temp;
+	temp = bot_ships[this->get_ship_num()];
+	bot_ships[this->get_ship_num()] = bot_ships[num];
+	bot_ships[num] = temp;
+	delete bot_ships[this->get_ship_num()];
+}
 
 void Bot::set_all_priority()
 {

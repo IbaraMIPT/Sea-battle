@@ -13,6 +13,7 @@ class Player{
 		int coord_y;
 		int new_coord_x;
 		int new_coord_y;
+		int collided_ship_num;
 		
 		Player();
 		~Player();

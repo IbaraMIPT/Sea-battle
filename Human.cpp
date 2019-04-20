@@ -125,6 +125,31 @@ Human::get_ship_HP(int num)
 	return human_ships[num]->get_HP();
 }
 
+void Human::set_ship_coords(int num, int new_x, int new_y)
+{
+	human_ships[num]->set_coords(new_x, new_y);
+}
+
+int Human::find_collided_ship_num(int _x, int _y)
+{
+	for (int i = 0; i < this->get_ship_num(); i++)
+	{
+		if ( (human_ships[i]->get_coord_x() == _x) && (human_ships[i]->get_coord_y() == _y) )
+		{
+			collided_ship_num = i;
+		}
+	}
+}
+
+void Human::delete_ship(int num)
+{
+	Ship* temp;
+	temp = human_ships[this->get_ship_num()];
+	human_ships[this->get_ship_num()] = human_ships[num];
+	human_ships[num] = temp;
+	delete human_ships[this->get_ship_num()];
+}
+
 void Human::info(){
 	for (int i = 0; i < this->get_ship_num(); i++ )
 	{

@@ -16,6 +16,8 @@ class Bot : public Player {
 		int get_ship_HP(int num);
 		void set_max_priority(int pr);
 		void set_ships_coords();
+		int find_collided_ship_num(int _x, int _y);
+		void delete_ship(int num);
 	private:
 		int max_priority;
 		Ship* bot_ships[5];

@@ -4,8 +4,7 @@
 #include "Player.h"
 
 class Human : public Player {
-	public:
-		//Human();
+	public:		
 		~Human();
 		void human_init();
 		void choose_action();
@@ -17,6 +16,9 @@ class Human : public Player {
 		int get_ship_coord_y(int num);
 		int get_ship_movement(int num);
 		int get_ship_HP(int num);
+		void set_ship_coords(int num, int new_x, int new_y);
+		int find_collided_ship_num(int _x, int _y);
+		void delete_ship(int num);
 		void info();
 	private:
 		char choosen_action[1];

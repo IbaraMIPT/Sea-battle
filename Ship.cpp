@@ -10,6 +10,7 @@ Ship::Ship()
 
 Ship::~Ship()
 {
+	//cout << "Ship deleted" << endl;
 	priority = -1000;
 }
 

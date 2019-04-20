@@ -63,8 +63,34 @@ void Game::set_ships_on_field()
 	}
 }
 
+void Game::move_ship_on_field(int num)
+{
+	if ( human->get_ship_HP( num ) == 3 )
+	{
+		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '3' );
+	}
+	else if ( human->get_ship_HP( num ) == 1 )
+	{
+		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '1' );
+	}
+	else if ( human->get_ship_HP( num ) == 6 )
+	{
+		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '6' );
+	}
+	else if ( human->get_ship_HP( num ) == 4 )
+	{
+		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '4' );
+	}
+	else if ( human->get_ship_HP( num ) == 2 )
+	{
+		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '2' );
+	}
+}
+
 void Game::live()
 {
+	int move_x, move_y;
+	srand(time(NULL));
 	this->set_ships_on_field();
 	cout << 
 		"SEA BATTLE" << endl <<
@@ -82,6 +108,9 @@ void Game::live()
 	system("pause");
 	system("cls");
 	game_field->show_field();
+	for (int i = 0; i < 5; i++){
+		cout << i << ": " << human->get_ship_coord_x(i) << " " << human->get_ship_coord_y(i) << endl;
+	}
 	while ( (human->get_ship_num() > 0) && (bot->get_ship_num() > 0) )
 	{
 		
@@ -128,10 +157,59 @@ void Game::live()
 			//->	ERROR: Ship can't move fo far 
 			while ( distance(  human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), human->new_coord_x, human->new_coord_y ) > human->get_ship_movement( human->get_current_ship_num() ) )
 			{
-					cout << distance(  human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), human->new_coord_x, human->new_coord_y ) << endl;
 					cout << "Your ship can't move so far!" << endl;	
 					goto MoveAgain;
 			}
+			
+			if (game_field->get_field(human->new_coord_x, human->new_coord_y) == '0')
+			{
+				game_field->set_field( human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), '0' );
+				human->set_ship_coords( human->get_current_ship_num(), human->new_coord_x, human->new_coord_y );
+				this->move_ship_on_field( human->get_current_ship_num() );				
+			}
+			else if ( (game_field->get_field(human->new_coord_x, human->new_coord_y) == '3') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '1') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '6') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '4') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '2') )
+			{
+				human->find_collided_ship_num(human->new_coord_x, human->new_coord_y);
+				/*
+				move_x = rand()%5 - 2;
+				move_y = rand()%5 - 2;
+				
+				cout << move_x << " " << move_y << endl;
+				
+				//	ERROR!!!!!
+				while ( (game_field->get_field( human->get_ship_coord_x(human->collided_ship_num)+move_x, human->get_ship_coord_y(human->collided_ship_num)+move_y ) != '0') || ( (move_x == 0) && (move_y == 0) ) || ( human->get_ship_coord_x(human->collided_ship_num)+move_x < 0 ) || ( human->get_ship_coord_x(human->collided_ship_num)+move_x > 8 ) || ( human->get_ship_coord_y(human->collided_ship_num)+move_y < 0 ) || ( human->get_ship_coord_y(human->collided_ship_num)+move_y > 8 ) || distance( human->get_ship_coord_x(human->collided_ship_num)+move_x, human->get_ship_coord_y(human->collided_ship_num)+move_y, human->get_ship_coord_x(human->collided_ship_num), human->get_ship_coord_y(human->collided_ship_num) ) > human->get_ship_movement(human->collided_ship_num) )
+				{
+					move_x = rand()%5 - 2;
+					move_y = rand()%5 - 2;
+				}
+				
+				cout << move_x << " " << move_y << endl;
+				
+				human->set_ship_coords(human->collided_ship_num, human->new_coord_x+move_x, human->new_coord_y+move_y);
+				this->move_ship_on_field( human->collided_ship_num );
+				
+				cout << human->get_ship_coord_x(human->collided_ship_num)+1 << " " << human->get_ship_coord_y(human->collided_ship_num)+1 << endl;
+				
+				game_field->set_field(human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), '0');
+				human->set_ship_coords( human->get_current_ship_num(), human->new_coord_x, human->new_coord_y);
+				this->move_ship_on_field( human->get_current_ship_num() );
+				
+				cout << human->get_ship_coord_x(human->get_current_ship_num())+1 << " " << human->get_ship_coord_y(human->get_current_ship_num())+1 << endl;
+				*/			
+				game_field->set_field(human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), '0');
+				game_field->set_field(human->get_ship_coord_x( human->collided_ship_num ), human->get_ship_coord_y( human->collided_ship_num ), '0');
+				human->delete_ship(human->get_current_ship_num());
+				human->delete_ship(human->collided_ship_num);
+			}
+			else if( (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'L') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'l') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'H') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'h') )
+			{
+				bot->find_collided_ship_num(human->new_coord_x, human->new_coord_y);
+				human->delete_ship(human->get_current_ship_num());
+				bot->delete_ship(bot->collided_ship_num);
+			}
+			system("pause");
+			system("cls");
+			game_field->show_field();
 		}
 		else
 		{
