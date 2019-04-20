@@ -63,28 +63,69 @@ void Game::set_ships_on_field()
 	}
 }
 
-void Game::move_ship_on_field(int num)
+void Game::draw_ship_on_field(int player, int num)
 {
-	if ( human->get_ship_HP( num ) == 3 )
+	if (player == 1)
 	{
-		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '3' );
+		if ( human->get_ship_HP( num ) == 3 )
+		{
+			game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '3' );
+		}
+		else if ( human->get_ship_HP( num ) == 1 )
+		{
+			game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '1' );
+		}
+		else if ( human->get_ship_HP( num ) == 6 )
+		{
+			game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '6' );
+		}
+		else if ( human->get_ship_HP( num ) == 4 )
+		{
+			game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '4' );
+		}
+		else if ( human->get_ship_HP( num ) == 2 )
+		{
+			game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '2' );
+		}
+		else if ( human->get_ship_HP( num ) <= 0 )
+		{
+			game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '0' );
+		}
 	}
-	else if ( human->get_ship_HP( num ) == 1 )
+	else
 	{
-		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '1' );
+		if ( bot->get_ship_HP( num ) == 3 )
+		{
+			game_field->set_field( bot->get_ship_coord_x( num ), bot->get_ship_coord_y( num ), 'L');
+		}
+		else if ( bot->get_ship_HP( num ) == 1 )
+		{
+			game_field->set_field( bot->get_ship_coord_x( num ), bot->get_ship_coord_y( num ), 'l' );
+		}
+		else if ( bot->get_ship_HP( num ) == 6 )
+		{
+			game_field->set_field( bot->get_ship_coord_x( num ), bot->get_ship_coord_y( num ), 'H' );
+		}
+		else if ( bot->get_ship_HP( num ) == 4 )
+		{
+			game_field->set_field( bot->get_ship_coord_x( num ), bot->get_ship_coord_y( num ), 'h' );
+		}
+		else if ( bot->get_ship_HP( num ) == 2 )
+		{
+			game_field->set_field( bot->get_ship_coord_x( num ), bot->get_ship_coord_y( num ), 'h' );
+		}
+		else if ( bot->get_ship_HP( num ) <= 0 )
+		{
+			game_field->set_field( bot->get_ship_coord_x( num ), bot->get_ship_coord_y( num ), '0' );
+		}			
 	}
-	else if ( human->get_ship_HP( num ) == 6 )
-	{
-		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '6' );
-	}
-	else if ( human->get_ship_HP( num ) == 4 )
-	{
-		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '4' );
-	}
-	else if ( human->get_ship_HP( num ) == 2 )
-	{
-		game_field->set_field( human->get_ship_coord_x( num ), human->get_ship_coord_y( num ), '2' );
-	}
+}
+
+void Game::show_turn()
+{
+	system("pause");
+	system("cls");
+	game_field->show_field();
 }
 
 void Game::live()
@@ -136,26 +177,24 @@ void Game::live()
 			
 			cout << "Enter new coordinates: " << endl;
 			MoveAgain:
-			cin >> human->new_coord_x >> human->new_coord_y;
-			human->new_coord_x--;
-			human->new_coord_y--;
+			human->input_new_coords();
 			
 			//->	ERROR: out of bounds
-			while ( (human->new_coord_x < 0) || (human->new_coord_x > 8) || (human->new_coord_y < 0) || (human->new_coord_y > 8) )
+			if ( (human->new_coord_x < 0) || (human->new_coord_x > 8) || (human->new_coord_y < 0) || (human->new_coord_y > 8) )
 			{							
 				cout << "Incorrect input!" << endl;
 				goto MoveAgain; 
 			}
 			
 			//->	ERROR: ship already in place
-			while ( ( human->new_coord_x == human->get_ship_coord_x(human->get_current_ship_num() ) ) && ( human->new_coord_y == human->get_ship_coord_y(human->get_current_ship_num() ) ) )
+			if ( ( human->new_coord_x == human->get_ship_coord_x(human->get_current_ship_num() ) ) && ( human->new_coord_y == human->get_ship_coord_y(human->get_current_ship_num() ) ) )
 			{
 				cout << "Your ship is already at this field!" << endl;													
 				goto MoveAgain;
 			}
 			
 			//->	ERROR: Ship can't move fo far 
-			while ( distance(  human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), human->new_coord_x, human->new_coord_y ) > human->get_ship_movement( human->get_current_ship_num() ) )
+			if ( distance(  human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), human->new_coord_x, human->new_coord_y ) > human->get_ship_movement( human->get_current_ship_num() ) )
 			{
 					cout << "Your ship can't move so far!" << endl;	
 					goto MoveAgain;
@@ -165,7 +204,7 @@ void Game::live()
 			{
 				game_field->set_field( human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), '0' );
 				human->set_ship_coords( human->get_current_ship_num(), human->new_coord_x, human->new_coord_y );
-				this->move_ship_on_field( human->get_current_ship_num() );				
+				this->draw_ship_on_field(1, human->get_current_ship_num() );				
 			}
 			else if ( (game_field->get_field(human->new_coord_x, human->new_coord_y) == '3') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '1') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '6') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '4') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '2') )
 			{
@@ -186,13 +225,13 @@ void Game::live()
 				cout << move_x << " " << move_y << endl;
 				
 				human->set_ship_coords(human->collided_ship_num, human->new_coord_x+move_x, human->new_coord_y+move_y);
-				this->move_ship_on_field( human->collided_ship_num );
+				this->draw_ship_on_field(1, human->collided_ship_num );
 				
 				cout << human->get_ship_coord_x(human->collided_ship_num)+1 << " " << human->get_ship_coord_y(human->collided_ship_num)+1 << endl;
 				
 				game_field->set_field(human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), '0');
 				human->set_ship_coords( human->get_current_ship_num(), human->new_coord_x, human->new_coord_y);
-				this->move_ship_on_field( human->get_current_ship_num() );
+				this->draw_ship_on_field(1, human->get_current_ship_num() );
 				
 				cout << human->get_ship_coord_x(human->get_current_ship_num())+1 << " " << human->get_ship_coord_y(human->get_current_ship_num())+1 << endl;
 				*/			
@@ -202,23 +241,76 @@ void Game::live()
 				human->delete_ship(human->collided_ship_num);
 			}
 			else if( (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'L') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'l') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'H') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'h') )
-			{
+			{	
 				bot->find_collided_ship_num(human->new_coord_x, human->new_coord_y);
+				game_field->set_field(human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), '0');
+				game_field->set_field(bot->get_ship_coord_x( bot->collided_ship_num ), bot->get_ship_coord_y( bot->collided_ship_num ), '0');
 				human->delete_ship(human->get_current_ship_num());
 				bot->delete_ship(bot->collided_ship_num);
+			
 			}
-			system("pause");
-			system("cls");
-			game_field->show_field();
+			this->show_turn();
 		}
 		else
 		{
 			
 		//->	Attack
 			
+			cout << "Enter coordinates to attack: ";
+			AttackAgain:
+			human->input_new_coords();
 			
+			//->	ERROR: out of bounds
+			if ( (human->new_coord_x < 0) || (human->new_coord_x > 8) || (human->new_coord_y < 0) || (human->new_coord_y > 8) )
+			{							
+				cout << "Incorrect input!" << endl;
+				goto AttackAgain; 
+			}
+			
+			//-> 	ERROR: shooting on empty field
+			if (game_field->get_field(human->new_coord_x, human->new_coord_y) == '0')
+			{
+				cout << "Do you really want to kill water???" << endl;
+				goto AttackAgain;
+			}
+			
+			//->	ERROR: out of shooting range
+			if ( distance( human->get_ship_coord_x( human->get_current_ship_num() ), human->get_ship_coord_y( human->get_current_ship_num() ), human->new_coord_x, human->new_coord_y ) > ( human->get_ship_attack_radius( human->get_current_ship_num() ) ) )
+			{
+				cout << "Out of shooting range!" << endl;
+				goto AttackAgain;
+			}
+			
+			//->	ERROR: Attack yourself
+			if ( ( human->get_ship_coord_x( human->get_current_ship_num() ) == human->new_coord_x ) && ( human->get_ship_coord_y( human->get_current_ship_num() ) == human->new_coord_y ) )
+			{
+				cout << "Ship can't attack itself!" << endl;
+				goto AttackAgain;	
+			}
+			else if ( (game_field->get_field(human->new_coord_x, human->new_coord_y) == '3') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '1') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '6') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '4') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == '2') )
+			{
+				human->find_collided_ship_num(human->new_coord_x, human->new_coord_y);
+				human->set_ship_HP( human->collided_ship_num, human->get_ship_damage( human->get_current_ship_num() ) );
+				this->draw_ship_on_field(1, human->collided_ship_num);
+				if (human->get_ship_HP(human->collided_ship_num) <= 0)
+				{
+					human->delete_ship(human->collided_ship_num);
+				}
+			}
+			
+			if ( (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'L') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'l') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'H') || (game_field->get_field(human->new_coord_x, human->new_coord_y) == 'h') )
+			{
+				bot->find_collided_ship_num(human->new_coord_x, human->new_coord_y);
+				bot->set_ship_HP(bot->collided_ship_num, human->get_ship_damage( human->get_current_ship_num() ) );
+				this->draw_ship_on_field(2, bot->collided_ship_num);
+				if (bot->get_ship_HP(bot->collided_ship_num) <= 0)
+				{
+					bot->delete_ship(bot->collided_ship_num);
+				}
+			}
+			
+			this->show_turn();
 		}
-		break;
 	}
 }
 	

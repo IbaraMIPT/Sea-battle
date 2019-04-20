@@ -28,6 +28,11 @@ void Bot::delete_ship(int num)
 	delete bot_ships[this->get_ship_num()];
 }
 
+void Bot::set_ship_HP(int num, int _dam)
+{
+	bot_ships[num]->set_HP(_dam);
+}
+
 void Bot::set_all_priority()
 {
 	

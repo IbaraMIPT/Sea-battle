@@ -12,7 +12,8 @@ class Game{
 		~Game();
 		void set_ships_on_field();
 		void cout_coords();
-		void move_ship_on_field(int num);
+		void draw_ship_on_field(int player, int num);
+		void show_turn();
 		void live();
 };
 

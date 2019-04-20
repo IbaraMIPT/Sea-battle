@@ -125,6 +125,21 @@ Human::get_ship_HP(int num)
 	return human_ships[num]->get_HP();
 }
 
+Human::get_ship_damage(int num)
+{
+	return human_ships[num]->get_damage();
+}
+
+Human::get_ship_attack_radius(int num)
+{
+	return human_ships[num]->get_attack_radius();
+}
+
+void Human::set_ship_HP(int num, int _dam)
+{
+	human_ships[num]->set_HP(_dam);
+}
+
 void Human::set_ship_coords(int num, int new_x, int new_y)
 {
 	human_ships[num]->set_coords(new_x, new_y);
@@ -148,6 +163,7 @@ void Human::delete_ship(int num)
 	human_ships[this->get_ship_num()] = human_ships[num];
 	human_ships[num] = temp;
 	delete human_ships[this->get_ship_num()];
+	this->set_ship_num(1);
 }
 
 void Human::info(){
