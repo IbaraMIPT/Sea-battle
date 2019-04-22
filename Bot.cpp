@@ -8,6 +8,11 @@
 
 using namespace std;
 
+Bot::~Bot()
+{
+	delete[] bot_ships;
+}
+
 int Bot::find_collided_ship_num(int _x, int _y)
 {
 	for (int i = 0; i < this->get_ship_num(); i++)
@@ -31,6 +36,11 @@ void Bot::delete_ship(int num)
 void Bot::set_ship_HP(int num, int _dam)
 {
 	bot_ships[num]->set_HP(_dam);
+}
+
+void Bot::set_ship_coords(int num, int new_x, int new_y)
+{
+	bot_ships[num]->set_coords(new_x, new_y);
 }
 
 Bot::get_ship_priority(int num)
@@ -58,14 +68,15 @@ Bot::get_ship_damage(int num)
 	return bot_ships[num]->get_damage();
 }
 
-void Bot::choose_rabdom_ship()
+void Bot::choose_random_ship()
 {
-	int rand = rand()%5;
-	computer_ship_num = this->get_ship_num() - rand;
+	int rnd;
+	rnd = rand()%5;
+	this->set_current_ship_num(this->get_ship_num() - rnd);
 	while (this->get_current_ship_num() < 0)
 	{
-		int rand = rand()%5;
-		computer_ship_num = this->get_ship_num() - rand;
+		int rnd = rand()%5;
+		this->set_current_ship_num(this->get_ship_num() - rnd);
 	}
 }
 

@@ -13,6 +13,11 @@ using namespace std;
 	cout << "Human created" << endl;
 }*/
 
+Human::~Human()
+{
+	delete[] human_ships;
+}
+
 void Human::choose_action()
 {
 	char step[1];

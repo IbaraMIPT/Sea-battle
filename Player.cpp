@@ -9,6 +9,11 @@ Player::Player()
 	this->current_ship_num = -1;
 }
 
+Player::~Player()
+{
+	cout << "Player deleted" << endl;
+}
+
 Player::get_ship_num(){return ship_num;}
 
 Player::get_current_ship_num(){return current_ship_num;}

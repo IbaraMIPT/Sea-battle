@@ -20,8 +20,9 @@ class Bot : public Player {
 		void set_ship_priority(int num, int pr);
 		void set_max_priority(int pr);
 		void set_ship_HP(int num, int _dam);
+		void set_ship_coords(int num, int new_x, int new_y);
 		void set_ships_coords();
-		void choose_rabdom_ship();
+		void choose_random_ship();
 		int find_collided_ship_num(int _x, int _y);
 		void delete_ship(int num);
 	private:

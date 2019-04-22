@@ -29,10 +29,30 @@ Game::Game()
 	bot->set_ships_coords();
 }
 
+Game::~Game()
+{
+	delete human;
+	delete bot;
+	delete game_field;
+}
+
 float distance(int x, int y, int _x, int _y) 
 {
 	float dist = sqrt( pow( (_x - x),2 ) + pow( (_y - y),2 ) );
 	return dist;
+}
+
+bool safe(int x, int y)
+{
+	bool safe_field = true;
+	for (int i = 0; i < human->get_ship_num(); i ++)
+	{
+		if ( distance(human->get_ship_coord_x(i), human->get_ship_coord_y(i), x, y) <= human->get_ship_attack_radius(i) )
+		{
+			safe_field = false;
+		}
+	}
+	return safe_field;
 }
 
 void Game::set_ships_on_field()
@@ -131,6 +151,8 @@ void Game::show_turn()
 void Game::live()
 {
 	int move_x, move_y;
+	bool is_safe = false;
+	bool is_breaked = false;
 	srand(time(NULL));
 	this->set_ships_on_field();
 	cout << 
@@ -149,7 +171,7 @@ void Game::live()
 	system("pause");
 	system("cls");
 	game_field->show_field();
-	while ( (human->get_ship_num() > 0) && (bot->get_ship_num() > 0) )
+	while ( (human->get_ship_num() >= 0) && (bot->get_ship_num() >= 0) )
 	{
 		
 		//->	All game engine will be here
@@ -316,47 +338,74 @@ void Game::live()
 			break;
 		}
 		cout << "Computer turn... " << endl;
-		Sleep(3000);
+		//Sleep(3000);
 		
+		
+		//Something wrong with this cicle
 		for (int i = 0; i < bot->get_ship_num(); i++ )
 		{
+			
+			//Damaged
 			if (bot->get_ship_HP(i) <= 2)
 			{
 				bot->set_ship_priority(i, 200);
+				cout << "200" << endl;
 			}
+			
+			//Standart priority
 			else
 			{
-				bot->set_ship_priority(i, 300);	
+				bot->set_ship_priority(i, 300);
+				cout << "300" << endl;	
 			}
-			for (j = 0; j < human->get_ship_num(); j++)
+			for (int j = 0; j < human->get_ship_num(); j++)
 			{
+				
+				//Damaged under attack
 				if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= human->get_ship_attack_radius(j) ) )
 				{
 					bot->set_ship_priority(i, 700);
+					cout << "700" << endl;
 				}
+				
+				//Under attack
 				if ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= human->get_ship_attack_radius(j) )
 				{
 					bot->set_ship_priority(i, 800);
+					cout << "800" << endl;
 				}
+				
+				//CAn attack ship
 				if ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius(i) )
 				{
 					bot->set_ship_priority(i, 850);	
+					cout << "850" << endl;
 				}	
+				
+				//Can destroy ship
 				if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_movement(i) ) )
 				{
-					bot->set_ship_priority(900);
+					bot->set_ship_priority(i, 900);
+					cout << "900" << endl;
 				}
+				
+				//Can destroy ship and stay alive
 				if ( ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius(i) ) && (human->get_ship_HP(j) - bot->get_ship_damage(i) <= 0) )
 				{
-					bot->set_ship_priority(1000);
+					bot->set_ship_priority(i, 1000);	
+					cout << "1000" << endl;
 				}
 			}
 		}
-		//priority set
 		
+		/*set standart priority to all
+		for(int i = 0; i < bot->get_ship_num(); i++)
+		{
+			bot->set_ship_priority(i ,300);
+		}
+		*/
 		bot->choose_random_ship();
 		bot->choose_max_priority();
-		
 		if (bot->get_max_priority() == 1000)
 		{
 			for (int j = 0; j < human->get_ship_num(); j++)
@@ -373,12 +422,15 @@ void Game::live()
 		}
 		else if (bot->get_max_priority() == 900)
 		{
-			if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_movement(i) ) )
+			for (int j = 0; j < human->get_ship_num(); j++)
 			{
-				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
-				game_field->set_field( human->get_ship_coord_x(human->collided_ship_num), human->get_ship_coord_y(human->collided_ship_num), '0');
-				bot->delete_ship(bot->get_current_ship_num());
-				human->delete_ship(human->collided_ship_num);
+				if (distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_movement( bot->get_current_ship_num() ) )
+				{
+					game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+					game_field->set_field( human->get_ship_coord_x(human->collided_ship_num), human->get_ship_coord_y(human->collided_ship_num), '0');
+					bot->delete_ship(bot->get_current_ship_num());
+					human->delete_ship(human->collided_ship_num);
+				}	
 			}
 		}
 		else if (bot->get_max_priority() == 850)
@@ -395,22 +447,182 @@ void Game::live()
 		}
 		else if (bot->get_max_priority() == 800)
 		{
-			
+			for (int dx = 2; dx > -3; dx--)
+			{
+				for (int dy = 2; dy > -3; dy--)
+				{
+					if ( ( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx >= 0 ) && ( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx < 9 ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() )+dy >= 0 ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() )+dy < 9 ) && ( distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) <= bot->get_ship_movement( bot->get_current_ship_num() ) ) && ( game_field->get_field( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == '0' ) && (safe( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == true ) )
+					{
+						bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() )+dx;
+						bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() )+dy;
+						is_safe = true;
+						is_breaked = true;
+						break;
+					}
+				}
+				if (is_breaked == true)
+				{
+					break;
+				}
+			}
+			if (is_safe == true)
+			{
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field( 2, bot->get_current_ship_num() );
+			}
+			else
+			{
+				bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+				bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				while ( (game_field->get_field( bot->new_coord_x, bot->new_coord_y ) != '0' ) || ( ( bot->get_ship_coord_x( bot->get_current_ship_num() ) == bot->new_coord_x ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() ) == bot->new_coord_y ) ) || (bot->new_coord_x < 0) || (bot->new_coord_x >= 9) || (bot->new_coord_y < 0) || (bot->new_coord_y >= 9) || (distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->new_coord_x, bot->new_coord_y) > bot->get_ship_movement( bot->get_current_ship_num() ) ) )
+				{
+					bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+					bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				}
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field(2, bot->get_current_ship_num() );
+			}
 		}
 		else if (bot->get_max_priority() == 700)
 		{
-			
+			for (int dx = 2; dx > -3; dx--)
+			{
+				for (int dy = 2; dy > -3; dy--)
+				{
+					if ( ( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx >= 0 ) && ( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx < 9 ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() )+dy >= 0 ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() )+dy < 9 ) && ( distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) <= bot->get_ship_movement( bot->get_current_ship_num() ) ) && ( game_field->get_field( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == '0' ) && (safe( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == true ) )
+					{
+						bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() )+dx;
+						bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() )+dy;
+						is_safe = true;
+						is_breaked = true;
+						break;
+					}
+				}
+				if (is_breaked == true)
+				{
+					break;
+				}
+			}
+			if (is_safe == true)
+			{
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field( 2, bot->get_current_ship_num() );
+			}
+			else
+			{
+				bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+				bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				while ( (game_field->get_field( bot->new_coord_x, bot->new_coord_y ) != '0' ) || ( ( bot->get_ship_coord_x( bot->get_current_ship_num() ) == bot->new_coord_x ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() ) == bot->new_coord_y ) ) || (bot->new_coord_x < 0) || (bot->new_coord_x >= 9) || (bot->new_coord_y < 0) || (bot->new_coord_y >= 9) || (distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->new_coord_x, bot->new_coord_y) > bot->get_ship_movement( bot->get_current_ship_num() ) ) )
+				{
+					bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+					bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				}
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field(2, bot->get_current_ship_num() );
+			}
 		}
 		else if (bot->get_max_priority() == 300)
 		{
-			
+			for (int dy = -2; dy < 3; dy++)
+			{
+				for (int dx = -2; dx < 3; dx++)
+				{
+					if ( (bot->get_ship_coord_x( bot->get_current_ship_num() )+dx < 0) || (bot->get_ship_coord_x( bot->get_current_ship_num() )+dx >= 9) || (bot->get_ship_coord_y( bot->get_current_ship_num() )+dy < 0) || (bot->get_ship_coord_y( bot->get_current_ship_num() )+dy >= 9) )
+					{
+						continue;
+					}
+					else if ( (safe( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == true) && (game_field->get_field( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == '0') && ( distance(bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy) <= bot->get_ship_movement( bot->get_current_ship_num() ) ) )
+					{
+						bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() )+dx;
+						bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() )+dy;
+						is_safe = true;
+						is_breaked = true;
+						break;
+					}
+				}
+				if (is_breaked == true)
+				{
+					break;
+				}
+			}
+			if (is_safe == true)
+			{
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field( 2, bot->get_current_ship_num() );
+			}
+			else
+			{
+				bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+				bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				while ( (game_field->get_field( bot->new_coord_x, bot->new_coord_y ) != '0' ) || ( ( bot->get_ship_coord_x( bot->get_current_ship_num() ) == bot->new_coord_x ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() ) == bot->new_coord_y ) ) || (bot->new_coord_x < 0) || (bot->new_coord_x >= 9) || (bot->new_coord_y < 0) || (bot->new_coord_y >= 9) || (distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->new_coord_x, bot->new_coord_y) > bot->get_ship_movement( bot->get_current_ship_num() ) ) )
+				{
+					bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+					bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				}
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field(2, bot->get_current_ship_num() );
+			}
 		}
 		else if (bot->get_max_priority() == 200)
 		{
-			
+			for (int dx = 2; dx > -3; dx--)
+			{
+				for (int dy = 2; dy > -3; dy--)
+				{
+					if ( ( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx >= 0 ) && ( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx < 9 ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() )+dy >= 0 ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() )+dy < 9 ) && ( distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) <= bot->get_ship_movement( bot->get_current_ship_num() ) ) && ( game_field->get_field( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == '0' ) && (safe( bot->get_ship_coord_x( bot->get_current_ship_num() )+dx, bot->get_ship_coord_y( bot->get_current_ship_num() )+dy ) == true ) )
+					{
+						bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() )+dx;
+						bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() )+dy;
+						is_safe = true;
+						is_breaked = true;
+						break;
+					}
+				}
+				if (is_breaked == true)
+				{
+					break;
+				}
+			}
+			if (is_safe == true)
+			{
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field( 2, bot->get_current_ship_num() );
+			}
+			else
+			{
+				bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+				bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				while ( (game_field->get_field( bot->new_coord_x, bot->new_coord_y ) != '0' ) || ( ( bot->get_ship_coord_x( bot->get_current_ship_num() ) == bot->new_coord_x ) && ( bot->get_ship_coord_y( bot->get_current_ship_num() ) == bot->new_coord_y ) ) || (bot->new_coord_x < 0) || (bot->new_coord_x >= 9) || (bot->new_coord_y < 0) || (bot->new_coord_y >= 9) || (distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), bot->new_coord_x, bot->new_coord_y) > bot->get_ship_movement( bot->get_current_ship_num() ) ) )
+				{
+					bot->new_coord_x = bot->get_ship_coord_x( bot->get_current_ship_num() ) + rand()%5 - 2;
+					bot->new_coord_y = bot->get_ship_coord_y( bot->get_current_ship_num() ) + rand()%5 - 2;
+				}
+				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
+				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
+				this->draw_ship_on_field(2, bot->get_current_ship_num() );
+			}
 		}
+		
+		is_safe = false;
+		is_breaked = false;
+		this->show_turn();
 	}
-	
+	if (human->get_ship_num() >=0){
+		cout << "You win! And tou still have " << human->get_ship_num()+1 << " ships." << endl;
+	}
+	else{
+		cout << "Your fleet was destroyed! You lose!" << endl <<
+		"Computer still have " << bot->get_ship_num()+1 << " ships.";
+	}
+	system("pause");
+	delete this;
 }
 	
 

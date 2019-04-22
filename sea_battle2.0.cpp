@@ -772,7 +772,7 @@ int main(){
 			else{
 				move_x = rand()%5 - 2;
 				move_y = rand()%5 - 2;
-				while ( ( game_field.get_field(computer_ships[computer_ship_num]->get_coord_x()+move_x, computer_ships[computer_ship_num]->get_coord_y()+move_y) != '0' ) || (move_x == 0) || (move_y == 0) || ( computer_ships[computer_ship_num]->get_coord_x()+move_x < 0 ) || ( computer_ships[computer_ship_num]->get_coord_x()+move_x >=9 ) || ( computer_ships[computer_ship_num]->get_coord_y()+move_y < 0 ) || ( computer_ships[computer_ship_num]->get_coord_y()+move_y >= 9 ) || ( distance( computer_ships[computer_ship_num]->get_coord_x()+move_x, computer_ships[computer_ship_num]->get_coord_y()+move_y, computer_ships[computer_ship_num]->get_coord_x(), computer_ships[computer_ship_num]->get_coord_y() ) > computer_ships[computer_ship_num]->get_movement() ) ){
+				while ( ( game_field.get_field(computer_ships[computer_ship_num]->get_coord_x()+move_x, computer_ships[computer_ship_num]->get_coord_y()+move_y) != '0' ) || ( (move_x == 0) && (move_y == 0) ) || ( computer_ships[computer_ship_num]->get_coord_x()+move_x < 0 ) || ( computer_ships[computer_ship_num]->get_coord_x()+move_x >=9 ) || ( computer_ships[computer_ship_num]->get_coord_y()+move_y < 0 ) || ( computer_ships[computer_ship_num]->get_coord_y()+move_y >= 9 ) || ( distance( computer_ships[computer_ship_num]->get_coord_x()+move_x, computer_ships[computer_ship_num]->get_coord_y()+move_y, computer_ships[computer_ship_num]->get_coord_x(), computer_ships[computer_ship_num]->get_coord_y() ) > computer_ships[computer_ship_num]->get_movement() ) ){
 					move_x = rand()%5 - 2;
 					move_y = rand()%5 - 2;
 				}
