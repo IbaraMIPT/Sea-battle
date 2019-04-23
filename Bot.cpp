@@ -71,11 +71,11 @@ Bot::get_ship_damage(int num)
 void Bot::choose_random_ship()
 {
 	int rnd;
-	rnd = rand()%5;
+	rnd = rand()%5+1;
 	this->set_current_ship_num(this->get_ship_num() - rnd);
 	while (this->get_current_ship_num() < 0)
 	{
-		int rnd = rand()%5;
+		int rnd = rand()%5+1;
 		this->set_current_ship_num(this->get_ship_num() - rnd);
 	}
 }
