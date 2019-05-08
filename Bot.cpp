@@ -8,9 +8,24 @@
 
 using namespace std;
 
+Bot::Bot()
+{
+	set_bot_current_ship(0);
+}
+
 Bot::~Bot()
 {
 	delete[] bot_ships;
+}
+
+void Bot::set_bot_current_ship(int num)
+{
+	bot_current_ship = num;
+}
+
+int Bot::get_bot_current_ship()
+{
+	return bot_current_ship;
 }
 
 int Bot::find_collided_ship_num(int _x, int _y)
@@ -71,12 +86,12 @@ Bot::get_ship_damage(int num)
 void Bot::choose_random_ship()
 {
 	int rnd;
-	rnd = rand()%5+1;
-	this->set_current_ship_num(this->get_ship_num() - rnd);
-	while (this->get_current_ship_num() < 0)
+	rnd = rand()%5;
+	this->set_current_ship_num(rnd);
+	while (this->get_current_ship_num() >= this->get_ship_num() )
 	{
-		int rnd = rand()%5+1;
-		this->set_current_ship_num(this->get_ship_num() - rnd);
+		int rnd = rand()%5;
+		this->set_current_ship_num(rnd);
 	}
 }
 

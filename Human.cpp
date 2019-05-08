@@ -169,7 +169,7 @@ void Human::delete_ship(int num)
 	human_ships[this->get_ship_num()] = human_ships[num];
 	human_ships[num] = temp;
 	//!!!
-	delete human_ships[this->get_ship_num()];
+	//delete human_ships[this->get_ship_num()];
 	this->set_ship_num(1);
 }
 

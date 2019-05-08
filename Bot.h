@@ -5,7 +5,7 @@
 
 class Bot : public Player {
 	public:
-		//Bot();
+		Bot();
 		~Bot();
 		void bot_init();
 		void choose_max_priority();
@@ -25,8 +25,11 @@ class Bot : public Player {
 		void choose_random_ship();
 		int find_collided_ship_num(int _x, int _y);
 		void delete_ship(int num);
+		void set_bot_current_ship(int num);
+		int get_bot_current_ship();
 	private:
 		int max_priority;
+		int bot_current_ship;
 		Ship* bot_ships[5];
 };
 
