@@ -16,7 +16,7 @@ class Player{
 		int collided_ship_num;
 		
 		Player();
-		~Player();
+		virtual ~Player();
 		int get_ship_num();
 		int get_current_ship_num();
 		void set_current_ship_num(int i);

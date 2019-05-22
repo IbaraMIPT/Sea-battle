@@ -17,6 +17,6 @@ Light_ship::Light_ship()
 
 Light_ship::~Light_ship()
 {
-	cout << "Light ship on (" << x+1 << ", " << y+1 << ") was destroyed." << endl;
+	//cout << "Light ship on (" << x+1 << ", " << y+1 << ") was destroyed." << endl;
 }
 

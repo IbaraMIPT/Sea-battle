@@ -5,7 +5,7 @@
 
 class Human : public Player {
 	public:		
-		~Human();
+		virtual ~Human();
 		void human_init();
 		void choose_action();
 		char* get_choosen_action();

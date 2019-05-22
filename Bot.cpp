@@ -42,10 +42,10 @@ int Bot::find_collided_ship_num(int _x, int _y)
 void Bot::delete_ship(int num)
 {
 	Ship* temp;
-	temp = bot_ships[this->get_ship_num()];
-	bot_ships[this->get_ship_num()] = bot_ships[num];
+	temp = bot_ships[this->get_ship_num()-1];
+	bot_ships[this->get_ship_num()-1] = bot_ships[num];
 	bot_ships[num] = temp;
-	delete bot_ships[this->get_ship_num()];
+	delete bot_ships[this->get_ship_num()-1];
 }
 
 void Bot::set_ship_HP(int num, int _dam)

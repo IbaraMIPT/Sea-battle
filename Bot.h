@@ -6,7 +6,7 @@
 class Bot : public Player {
 	public:
 		Bot();
-		~Bot();
+		virtual ~Bot();
 		void bot_init();
 		void choose_max_priority();
 		int get_max_priority();

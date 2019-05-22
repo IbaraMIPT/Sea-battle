@@ -165,18 +165,16 @@ int Human::find_collided_ship_num(int _x, int _y)
 void Human::delete_ship(int num)
 {
 	Ship* temp;
-	temp = human_ships[this->get_ship_num()];
-	human_ships[this->get_ship_num()] = human_ships[num];
+	temp = human_ships[this->get_ship_num()-1];
+	human_ships[this->get_ship_num()-1] = human_ships[num];
 	human_ships[num] = temp;
-	//!!!
-	//delete human_ships[this->get_ship_num()];
+	delete human_ships[this->get_ship_num()-1];
 	this->set_ship_num(1);
 }
 
 void Human::info(){
 	for (int i = 0; i < this->get_ship_num(); i++ )
 	{
-		//Sleep(1500);
 		human_ships[i]->info();
 	}
 }

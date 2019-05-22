@@ -6,7 +6,7 @@
 class Heavy_ship : public Ship{
 	public:
 		Heavy_ship();
-		~Heavy_ship();
+		virtual ~Heavy_ship();
 };
 
 #endif

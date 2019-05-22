@@ -171,7 +171,7 @@ void Game::live()
 	system("pause");
 	system("cls");
 	game_field->show_field();
-	while ( (human->get_ship_num() >= 0) && (bot->get_ship_num() >= 0) )
+	while ( (human->get_ship_num() > 0) && (bot->get_ship_num() > 0) )
 	{
 		
 		//->	All game engine will be here
@@ -350,7 +350,7 @@ void Game::live()
 		{
 			if ( distance( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius( bot->get_current_ship_num() ) )
 			{
-				can_attack == true;
+				can_attack = true;
 			}
 		}
 		

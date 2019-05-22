@@ -6,7 +6,7 @@
 class Light_ship : public Ship{
 	public:
 		Light_ship();
-		~Light_ship();
+		virtual ~Light_ship();
 };
 
 #endif
