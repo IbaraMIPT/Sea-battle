@@ -394,10 +394,10 @@ void Game::live()
 		}		
 		
 		bot->set_bot_current_ship(bot->get_bot_current_ship()+1);
-		/*
+		
 		
 		//Something wrong with this cicle
-		for (int i = 0; i < bot->get_ship_num(); i++ )
+		/*for (int i = 0; i < bot->get_ship_num(); i++ )
 		{
 			cout << i << endl;
 			//Damaged
@@ -409,48 +409,48 @@ void Game::live()
 			else
 			{
 				bot->set_ship_priority(i, 300);	
+				cout << "300 set" << endl;
 			}
 			for (int j = 0; j < human->get_ship_num(); j++)
 			{
-				cout << "j " << j << endl;
+				cout << "j = " << j << endl;
 				//Damaged under attack
 				if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= human->get_ship_attack_radius(j) ) )
 				{
 					bot->set_ship_priority(i, 700);
 				}
+				cout << "700 checked" << endl;
 				
 				//Under attack
-				if ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= human->get_ship_attack_radius(j) )
+				/*if ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= human->get_ship_attack_radius(j) )
 				{
 					bot->set_ship_priority(i, 800);
 				}
+				cout << "800 checked" << endl;*//*
 				
 				//Can attack ship
 				if ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius(i) )
 				{
 					bot->set_ship_priority(i, 850);	
-				}	
+				}
+				cout << "850 checked" << endl;	
 				
 				//Can destroy ship
 				if ( (bot->get_ship_HP(i) <= 2) && ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_movement(i) ) )
 				{
 					bot->set_ship_priority(i, 900);
 				}
+				cout << "900 checked" << endl;
 				
 				//Can destroy ship and stay alive
 				if ( ( distance( bot->get_ship_coord_x(i), bot->get_ship_coord_y(i), human->get_ship_coord_x(j), human->get_ship_coord_y(j) ) <= bot->get_ship_attack_radius(i) ) && (human->get_ship_HP(j) - bot->get_ship_damage(i) <= 0) )
 				{
 					bot->set_ship_priority(i, 1000);	
 				}
+				cout << "1000 checked" << endl;
 			}
-		}
-		
-		cout << bot->get_ship_priority(0) << endl;
-		cout << bot->get_ship_priority(1) << endl;
-		cout << bot->get_ship_priority(2) << endl;
-		cout << bot->get_ship_priority(3) << endl;
-		cout << bot->get_ship_priority(4) << endl;
-		
+			cout << bot->get_ship_priority(i) << endl;
+		}		
 		
 		bot->choose_max_priority();
 		
@@ -464,7 +464,7 @@ void Game::live()
 				break;
 			}	
 		}
-		bot->set_max_priority(bot->get_ship_priority(bot->get_current_ship_num() ) );
+		bot->set_max_priority(bot->get_ship_priority(bot->get_current_ship_num() ) ); 
 		
 		if (bot->get_max_priority() == 1000)
 		{
@@ -587,7 +587,7 @@ void Game::live()
 		}
 		else if (bot->get_max_priority() == 300)
 		{
-			/*for (int dy = 2; dy > -3; dy--)
+			for (int dy = 2; dy > -3; dy--)
 			{
 				for (int dx = 2; dx > -3; dx--)
 				{
@@ -627,8 +627,8 @@ void Game::live()
 				game_field->set_field( bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() ), '0');
 				bot->set_ship_coords( bot->get_current_ship_num(), bot->new_coord_x, bot->new_coord_y);
 				this->draw_ship_on_field(2, bot->get_current_ship_num() );
-			}*/
-			/*int move_x;
+			}
+			int move_x;
 			int move_y;
 			if ( game_field->get_field(bot->get_ship_coord_x( bot->get_current_ship_num() ), bot->get_ship_coord_y( bot->get_current_ship_num() )-bot->get_ship_movement( bot->get_current_ship_num() ) ) == '0' ){
 				move_x = 0;

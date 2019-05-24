@@ -17,5 +17,5 @@ Heavy_ship::Heavy_ship()
 
 Heavy_ship::~Heavy_ship()
 {
-	//cout << "Heavy ship on (" << x+1 << ", " << y+1 << ") was destroyed." << endl;
+	cout << "Heavy ship on (" << x+1 << ", " << y+1 << ") was destroyed." << endl;
 }
